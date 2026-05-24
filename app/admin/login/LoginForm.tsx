@@ -1,12 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
-import type { loginAdmin } from "@/app/actions/admin-auth";
+import { loginAdmin } from "@/app/actions/admin-auth";
 
-type LoginAction = typeof loginAdmin;
-
-export default function LoginForm({ action }: { action: LoginAction }) {
-  const [state, formAction, isPending] = useActionState(action, null);
+// loginAdmin is imported directly (not via prop) so useActionState holds a stable
+// reference and correctly propagates state updates back to the client after each submit.
+export default function LoginForm() {
+  const [state, formAction, isPending] = useActionState(loginAdmin, null);
 
   return (
     <div className="min-h-screen bg-[#FAF5EF] flex items-center justify-center px-4" dir="rtl">

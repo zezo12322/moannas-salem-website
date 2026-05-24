@@ -1,9 +1,8 @@
-import { loginAdmin } from "@/app/actions/admin-auth";
+import { loginAdmin as _loginAdmin } from "@/app/actions/admin-auth";
 import LoginForm from "./LoginForm";
 
-// Server Component — imports loginAdmin so it's in the server action registry.
-// Passes it as a prop to the Client Component; this is the canonical pattern
-// for avoiding "Failed to find Server Action" in production builds.
+// Server Component — importing loginAdmin ensures it appears in the server-side
+// action manifest at build time. LoginForm also imports it directly for useActionState.
 export default function AdminLoginPage() {
-  return <LoginForm action={loginAdmin} />;
+  return <LoginForm />;
 }

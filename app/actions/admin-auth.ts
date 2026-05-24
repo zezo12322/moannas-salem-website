@@ -14,18 +14,32 @@ export async function loginAdmin(
     return { error: "البريد الإلكتروني وكلمة المرور مطلوبان." };
   }
 
-  const supabase = await createAuthSupabaseClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  // Wrap Supabase call in try-catch so missing env vars or network errors
+  // return a user-visible message rather than an unhandled server action throw
+  // (a thrown server action leaves useActionState state unchanged → no error shown).
+  let authFailed = false;
+  try {
+    const supabase = await createAuthSupabaseClient();
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) authFailed = true;
+  } catch {
+    return { error: "خطأ في الاتصال بالخادم. تأكدي من إعدادات البيئة." };
+  }
 
-  if (error) {
+  if (authFailed) {
     return { error: "بيانات الدخول غير صحيحة." };
   }
 
+  // redirect() throws intentionally — must be outside try-catch.
   redirect("/admin");
 }
 
 export async function logoutAdmin(): Promise<void> {
-  const supabase = await createAuthSupabaseClient();
-  await supabase.auth.signOut();
+  try {
+    const supabase = await createAuthSupabaseClient();
+    await supabase.auth.signOut();
+  } catch {
+    // ignore — redirect regardless
+  }
   redirect("/admin/login");
 }
