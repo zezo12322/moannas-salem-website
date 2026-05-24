@@ -16,14 +16,37 @@ const articles = [
     readingTime: "٨ دقائق",
     tags: ["التغطية الميدانية", "الاعتقال", "المصادر"],
   },
+  {
+    href: "/guide/journalists/freelance-rights",
+    title: "حقوق الصحفيات المستقلات (الفريلانس)",
+    summary: "العقود، الفواتير، ملكية المحتوى، وسبل الانتصاف عند عدم الدفع — حقوقك كصحفية مستقلة.",
+    readingTime: "٧ دقائق",
+    tags: ["فريلانس", "العقود", "حقوق المحتوى"],
+  },
+  {
+    href: "/guide/journalists/media-contracts",
+    title: "التعاقد مع المؤسسات الإعلامية",
+    summary: "ما يجب أن يتضمنه عقد عمل عادل — بنود ملكية المحتوى، حقوق الاسم، وعلامات التحذير.",
+    readingTime: "٨ دقائق",
+    tags: ["عقد العمل", "بنود تعاقدية", "الملكية الفكرية"],
+  },
+  {
+    href: "/guide/journalists/newsroom-harassment",
+    title: "التحرش في بيئة التحرير",
+    summary: "أشكال التحرش في غرف الأخبار، التوثيق، التصعيد الداخلي، وقانون ١٥٠/٢٠٢٠.",
+    readingTime: "٩ دقائق",
+    tags: ["التحرش", "التوثيق", "قانون العمل"],
+  },
+  {
+    href: "/guide/journalists/field-digital-safety",
+    title: "السلامة الرقمية أثناء التغطية",
+    summary: "تأمين الجهاز قبل الميدان، سيجنال، حماية المصادر، VPN، وبروتوكول مصادرة الجهاز.",
+    readingTime: "٨ دقائق",
+    tags: ["OPSEC", "سيجنال", "حماية المصادر", "الحقل"],
+  },
 ];
 
-const comingSoon = [
-  "حقوق الصحفيات المستقلات (الفريلانس)",
-  "التعاقد مع المؤسسات الإعلامية",
-  "التحرش في بيئة التحرير",
-  "السلامة الرقمية أثناء التغطية",
-];
+const comingSoon: string[] = [];
 
 export default function JournalistsGuidePage() {
   return (
@@ -86,17 +109,19 @@ export default function JournalistsGuidePage() {
           </section>
 
           {/* Coming soon */}
-          <section className="mb-8">
-            <h2 className="text-[18px] font-bold text-[#211A22] mb-4">قريبًا</h2>
-            <div className="flex flex-col gap-2">
-              {comingSoon.map((title) => (
-                <div key={title} className="flex items-center gap-3 bg-[#FAF5EF] border border-[#DDD3CC] rounded-[12px] px-4 py-3">
-                  <span className="text-[11px] bg-[#DDD3CC] text-[#6B5D6E] px-2 py-0.5 rounded-full font-medium flex-shrink-0">قريبًا</span>
-                  <p className="text-[14px] text-[#6B5D6E]">{title}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+          {comingSoon.length > 0 && (
+            <section className="mb-8">
+              <h2 className="text-[18px] font-bold text-[#211A22] mb-4">قريبًا</h2>
+              <div className="flex flex-col gap-2">
+                {comingSoon.map((title) => (
+                  <div key={title} className="flex items-center gap-3 bg-[#FAF5EF] border border-[#DDD3CC] rounded-[12px] px-4 py-3">
+                    <span className="text-[11px] bg-[#DDD3CC] text-[#6B5D6E] px-2 py-0.5 rounded-full font-medium flex-shrink-0">قريبًا</span>
+                    <p className="text-[14px] text-[#6B5D6E]">{title}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Trust note */}
           <div className="flex gap-3 items-start bg-[rgba(217,150,61,0.08)] border border-[#D9963D] rounded-[12px] p-4 mb-8">

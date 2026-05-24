@@ -16,14 +16,37 @@ const articles = [
     readingTime: "١٠ دقائق",
     tags: ["التحرش", "الابتزاز", "الإبلاغ", "السلامة الرقمية"],
   },
+  {
+    href: "/guide/digital-safety/account-security",
+    title: "تأمين حساباتك على وسائل التواصل الاجتماعي",
+    summary: "المصادقة الثنائية، كلمات المرور، مراجعة الأذونات، والتعامل مع اختراق الحسابات.",
+    readingTime: "٨ دقائق",
+    tags: ["المصادقة الثنائية", "كلمات المرور", "حماية الحساب"],
+  },
+  {
+    href: "/guide/digital-safety/cyberstalking",
+    title: "المطاردة الرقمية — كيف تكتشفينها وتوقفينها",
+    summary: "علامات المطاردة الرقمية، الكشف عن برامج التجسس، التوثيق، والخيارات القانونية.",
+    readingTime: "١٠ دقائق",
+    tags: ["مطاردة رقمية", "برامج التجسس", "القانون ١٧٥"],
+  },
+  {
+    href: "/guide/digital-safety/field-safety",
+    title: "السلامة الرقمية للصحفيات في الميدان",
+    summary: "تحضير الجهاز قبل التغطية، تشفير الاتصالات، OPSEC وبروتوكولات الحماية.",
+    readingTime: "٩ دقائق",
+    tags: ["الميدان", "سيجنال", "التشفير", "OPSEC"],
+  },
+  {
+    href: "/guide/digital-safety/identity-protection",
+    title: "حماية هويتك عند نشر شهادات حساسة",
+    summary: "إزالة البيانات الوصفية، قنوات مجهولة الهوية، SecureDrop، والتعامل مع الدوكسينج.",
+    readingTime: "٩ دقائق",
+    tags: ["البيانات الوصفية", "الدوكسينج", "المصادر", "سيكيور دروب"],
+  },
 ];
 
-const comingSoon = [
-  "تأمين حساباتك على وسائل التواصل الاجتماعي",
-  "المطاردة الرقمية — كيف تكتشفينها وتوقفينها",
-  "السلامة الرقمية للصحفيات في الميدان",
-  "حماية هويتك عند نشر شهادات حساسة",
-];
+const comingSoon: string[] = [];
 
 export default function DigitalSafetyGuidePage() {
   return (
@@ -96,17 +119,19 @@ export default function DigitalSafetyGuidePage() {
           </section>
 
           {/* Coming soon */}
-          <section className="mb-8">
-            <h2 className="text-[18px] font-bold text-[#211A22] mb-4">قريبًا</h2>
-            <div className="flex flex-col gap-2">
-              {comingSoon.map((title) => (
-                <div key={title} className="flex items-center gap-3 bg-[#FAF5EF] border border-[#DDD3CC] rounded-[12px] px-4 py-3">
-                  <span className="text-[11px] bg-[#DDD3CC] text-[#6B5D6E] px-2 py-0.5 rounded-full font-medium flex-shrink-0">قريبًا</span>
-                  <p className="text-[14px] text-[#6B5D6E]">{title}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+          {comingSoon.length > 0 && (
+            <section className="mb-8">
+              <h2 className="text-[18px] font-bold text-[#211A22] mb-4">قريبًا</h2>
+              <div className="flex flex-col gap-2">
+                {comingSoon.map((title) => (
+                  <div key={title} className="flex items-center gap-3 bg-[#FAF5EF] border border-[#DDD3CC] rounded-[12px] px-4 py-3">
+                    <span className="text-[11px] bg-[#DDD3CC] text-[#6B5D6E] px-2 py-0.5 rounded-full font-medium flex-shrink-0">قريبًا</span>
+                    <p className="text-[14px] text-[#6B5D6E]">{title}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           <div className="text-center">
             <Link href="/guide" className="text-[13px] text-[#4B245E] hover:text-[#3A1A4A]">← دليل الحقوق الرئيسي</Link>

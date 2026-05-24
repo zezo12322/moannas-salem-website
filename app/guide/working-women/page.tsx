@@ -16,14 +16,37 @@ const articles = [
     readingTime: "٩ دقائق",
     tags: ["إجازة الأمومة", "الفصل", "الرضاعة"],
   },
+  {
+    href: "/guide/working-women/unfair-dismissal",
+    title: "الفصل التعسفي — حقوقك وخياراتك",
+    summary: "الفصل المشروع وغير المشروع، نافذة الـ٩٠ يومًا، لجان النزاعات، وتعويض نهاية الخدمة.",
+    readingTime: "٩ دقائق",
+    tags: ["الفصل التعسفي", "قانون العمل ١٢", "التعويض"],
+  },
+  {
+    href: "/guide/working-women/promotion-discrimination",
+    title: "التمييز في الترقيات — كيف توثّقينه",
+    summary: "أنماط السقف الزجاجي، بناء سجل إثبات، التقديم للموارد البشرية، والخيارات القانونية.",
+    readingTime: "٨ دقائق",
+    tags: ["التمييز", "الترقيات", "السقف الزجاجي", "التوثيق"],
+  },
+  {
+    href: "/guide/working-women/fair-pay",
+    title: "الأجر العادل — كيف تطالبين بحقك",
+    summary: "مقارنة الرواتب، كيفية طلب مراجعة الراتب، تكتيكات التفاوض، والموقف القانوني.",
+    readingTime: "٧ دقائق",
+    tags: ["الأجر العادل", "التفاوض", "فجوة الرواتب"],
+  },
+  {
+    href: "/guide/working-women/workplace-stress",
+    title: "الضغط النفسي في العمل والحدود القانونية",
+    summary: "الفرق بين الضغط المهني والإساءة النفسية — التعرف على الأنماط، التوثيق، والحماية القانونية.",
+    readingTime: "٩ دقائق",
+    tags: ["الإساءة النفسية", "الضغط المهني", "حدود قانونية"],
+  },
 ];
 
-const comingSoon = [
-  "الفصل التعسفي — حقوقك وخياراتك",
-  "التمييز في الترقيات — كيف توثّقينه",
-  "الأجر العادل — كيف تطالبين بحقك",
-  "الضغط النفسي في العمل والحدود القانونية",
-];
+const comingSoon: string[] = [];
 
 export default function WorkingWomenGuidePage() {
   return (
@@ -84,17 +107,19 @@ export default function WorkingWomenGuidePage() {
           </section>
 
           {/* Coming soon */}
-          <section className="mb-8">
-            <h2 className="text-[18px] font-bold text-[#211A22] mb-4">قريبًا</h2>
-            <div className="flex flex-col gap-2">
-              {comingSoon.map((title) => (
-                <div key={title} className="flex items-center gap-3 bg-[#FAF5EF] border border-[#DDD3CC] rounded-[12px] px-4 py-3">
-                  <span className="text-[11px] bg-[#DDD3CC] text-[#6B5D6E] px-2 py-0.5 rounded-full font-medium flex-shrink-0">قريبًا</span>
-                  <p className="text-[14px] text-[#6B5D6E]">{title}</p>
-                </div>
-              ))}
-            </div>
-          </section>
+          {comingSoon.length > 0 && (
+            <section className="mb-8">
+              <h2 className="text-[18px] font-bold text-[#211A22] mb-4">قريبًا</h2>
+              <div className="flex flex-col gap-2">
+                {comingSoon.map((title) => (
+                  <div key={title} className="flex items-center gap-3 bg-[#FAF5EF] border border-[#DDD3CC] rounded-[12px] px-4 py-3">
+                    <span className="text-[11px] bg-[#DDD3CC] text-[#6B5D6E] px-2 py-0.5 rounded-full font-medium flex-shrink-0">قريبًا</span>
+                    <p className="text-[14px] text-[#6B5D6E]">{title}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           {/* Trust note */}
           <div className="flex gap-3 items-start bg-[rgba(217,150,61,0.08)] border border-[#D9963D] rounded-[12px] p-4 mb-8">
