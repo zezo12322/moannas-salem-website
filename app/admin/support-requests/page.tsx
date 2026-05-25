@@ -1,5 +1,5 @@
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { markSupportRead } from "@/app/actions/admin-mutations";
+import { markSupportRead, deleteSupportRequest } from "@/app/actions/admin-mutations";
 
 type SupportRequest = {
   id: string;
@@ -113,15 +113,26 @@ export default async function SupportRequestsPage() {
                   </p>
                 )}
 
-                <form action={markSupportRead}>
-                  <input type="hidden" name="id" value={req.id} />
-                  <button
-                    type="submit"
-                    className="text-[12px] text-[#4B245E] border border-[#4B245E] rounded-[6px] px-3 py-1 hover:bg-[rgba(75,36,94,0.06)] transition-colors"
-                  >
-                    تحديد كمقروء
-                  </button>
-                </form>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <form action={markSupportRead}>
+                    <input type="hidden" name="id" value={req.id} />
+                    <button
+                      type="submit"
+                      className="text-[12px] text-[#4B245E] border border-[#4B245E] rounded-[6px] px-3 py-1 hover:bg-[rgba(75,36,94,0.06)] transition-colors"
+                    >
+                      تحديد كمقروء
+                    </button>
+                  </form>
+                  <form action={deleteSupportRequest}>
+                    <input type="hidden" name="id" value={req.id} />
+                    <button
+                      type="submit"
+                      className="text-[12px] text-red-700 border border-red-300 rounded-[6px] px-3 py-1 hover:bg-red-50 transition-colors"
+                    >
+                      حذف
+                    </button>
+                  </form>
+                </div>
               </div>
             ))}
           </div>
@@ -153,9 +164,20 @@ export default async function SupportRequestsPage() {
                     {req.support_types?.join("، ")}
                   </p>
                 </div>
-                <span className="text-[11px] text-[#6B5D6E] flex-shrink-0">
-                  {formatDate(req.created_at)}
-                </span>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-[11px] text-[#6B5D6E]">
+                    {formatDate(req.created_at)}
+                  </span>
+                  <form action={deleteSupportRequest}>
+                    <input type="hidden" name="id" value={req.id} />
+                    <button
+                      type="submit"
+                      className="text-[11px] text-red-600 border border-red-200 rounded-[6px] px-2 py-0.5 hover:bg-red-50 transition-colors"
+                    >
+                      حذف
+                    </button>
+                  </form>
+                </div>
               </div>
             ))}
           </div>

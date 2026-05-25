@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import {
   updateTestimonyStatus,
   publishTestimony,
+  deleteTestimony,
 } from "@/app/actions/admin-mutations";
 import Link from "next/link";
 
@@ -245,6 +246,20 @@ export default async function TestimonyDetailPage({
           )}
         </div>
       )}
+
+      {/* Delete */}
+      <div className="border border-red-200 rounded-[12px] p-4">
+        <p className="text-[12px] text-[#6B5D6E] mb-3">حذف الشهادة نهائيًا من قاعدة البيانات.</p>
+        <form action={deleteTestimony}>
+          <input type="hidden" name="id" value={testimony.id} />
+          <button
+            type="submit"
+            className="text-[13px] text-red-700 border border-red-300 rounded-[8px] px-3 py-1.5 hover:bg-red-50 transition-colors"
+          >
+            حذف الشهادة
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

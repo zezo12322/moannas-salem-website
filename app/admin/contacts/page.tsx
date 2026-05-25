@@ -1,5 +1,5 @@
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { markContactRead } from "@/app/actions/admin-mutations";
+import { markContactRead, deleteContactMessage } from "@/app/actions/admin-mutations";
 
 type ContactMessage = {
   id: string;
@@ -81,15 +81,26 @@ export default async function ContactsPage() {
                     بيانات التواصل: {contact.contact_info}
                   </p>
                 )}
-                <form action={markContactRead}>
-                  <input type="hidden" name="id" value={contact.id} />
-                  <button
-                    type="submit"
-                    className="text-[12px] text-[#4B245E] border border-[#4B245E] rounded-[6px] px-3 py-1 hover:bg-[rgba(75,36,94,0.06)] transition-colors"
-                  >
-                    تحديد كمقروءة
-                  </button>
-                </form>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <form action={markContactRead}>
+                    <input type="hidden" name="id" value={contact.id} />
+                    <button
+                      type="submit"
+                      className="text-[12px] text-[#4B245E] border border-[#4B245E] rounded-[6px] px-3 py-1 hover:bg-[rgba(75,36,94,0.06)] transition-colors"
+                    >
+                      تحديد كمقروءة
+                    </button>
+                  </form>
+                  <form action={deleteContactMessage}>
+                    <input type="hidden" name="id" value={contact.id} />
+                    <button
+                      type="submit"
+                      className="text-[12px] text-red-700 border border-red-300 rounded-[6px] px-3 py-1 hover:bg-red-50 transition-colors"
+                    >
+                      حذف
+                    </button>
+                  </form>
+                </div>
               </div>
             ))}
           </div>
@@ -114,9 +125,20 @@ export default async function ContactsPage() {
                       <p className="text-[11px] text-[#6B5D6E]">{contact.topic}</p>
                     )}
                   </div>
-                  <span className="text-[11px] text-[#6B5D6E] flex-shrink-0">
-                    {formatDate(contact.created_at)}
-                  </span>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className="text-[11px] text-[#6B5D6E]">
+                      {formatDate(contact.created_at)}
+                    </span>
+                    <form action={deleteContactMessage}>
+                      <input type="hidden" name="id" value={contact.id} />
+                      <button
+                        type="submit"
+                        className="text-[11px] text-red-600 border border-red-200 rounded-[6px] px-2 py-0.5 hover:bg-red-50 transition-colors"
+                      >
+                        حذف
+                      </button>
+                    </form>
+                  </div>
                 </div>
                 <p className="text-[13px] text-[#6B5D6E] leading-[1.6] line-clamp-2">
                   {contact.message}

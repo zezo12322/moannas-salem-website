@@ -3,6 +3,7 @@
 import { createAuthSupabaseClient } from "@/lib/supabase/ssr-server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 async function assertAdmin() {
   const supabase = await createAuthSupabaseClient();
@@ -72,5 +73,34 @@ export async function markSupportRead(formData: FormData): Promise<void> {
   if (!id) return;
   const admin = createAdminSupabaseClient();
   await admin.from("support_requests").update({ status: "read" }).eq("id", id);
+  revalidatePath("/admin/support-requests");
+}
+
+// ── Delete actions ────────────────────────────────────────────────────────────
+
+export async function deleteTestimony(formData: FormData): Promise<void> {
+  await assertAdmin();
+  const id = formData.get("id")?.toString();
+  if (!id) return;
+  const admin = createAdminSupabaseClient();
+  await admin.from("testimonies").delete().eq("id", id);
+  redirect("/admin/testimonies");
+}
+
+export async function deleteContactMessage(formData: FormData): Promise<void> {
+  await assertAdmin();
+  const id = formData.get("id")?.toString();
+  if (!id) return;
+  const admin = createAdminSupabaseClient();
+  await admin.from("contact_messages").delete().eq("id", id);
+  revalidatePath("/admin/contacts");
+}
+
+export async function deleteSupportRequest(formData: FormData): Promise<void> {
+  await assertAdmin();
+  const id = formData.get("id")?.toString();
+  if (!id) return;
+  const admin = createAdminSupabaseClient();
+  await admin.from("support_requests").delete().eq("id", id);
   revalidatePath("/admin/support-requests");
 }
