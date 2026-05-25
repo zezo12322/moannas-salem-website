@@ -2,34 +2,31 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
   title: "المرصد والتقارير — مؤنث سالم",
   description: "المرصد — توثيق منهجي لانتهاكات بيئة العمل في مصر. تقارير، بيانات ومواقف، ومؤشرات بيئة العمل.",
 };
 
-const indicators = [
-  {
-    number: "٣٠٪",
-    label: "فجوة الأجور بين الجنسين في قطاعات العمل المصرية",
-    source: "تقديرات أولية، ٢٠٢٥",
-    color: "#D9963D",
-  },
-  {
-    number: "٦٧٪",
-    label: "من النساء العاملات اللواتي استُطلعن تعرّضن لضغط مهني بسبب الجنس",
-    source: "استطلاع مؤنث سالم، ٢٠٢٥",
-    color: "#C66B7D",
-  },
-  {
-    number: "٤٠+",
-    label: "شهادة موثّقة لانتهاكات بيئة العمل — جُمعت خلال أول ٦ أشهر",
-    source: "مؤنث سالم، ٢٠٢٥–٢٠٢٦",
-    color: "#4B245E",
-  },
-];
+type Stat = { id: string; number_text: string; label: string; source_label: string | null; accent_color: string };
+type Statement = { id: string; date_label: string; title: string; summary: string };
 
-export default function ObservatoryPage() {
+async function getData() {
+  try {
+    const admin = createAdminSupabaseClient();
+    const [{ data: stats }, { data: statements }] = await Promise.all([
+      admin.from("observatory_stats").select("id, number_text, label, source_label, accent_color").order("display_order"),
+      admin.from("observatory_statements").select("id, date_label, title, summary").eq("status", "published").order("created_at", { ascending: false }),
+    ]);
+    return { stats: (stats as Stat[]) ?? [], statements: (statements as Statement[]) ?? [] };
+  } catch {
+    return { stats: [], statements: [] };
+  }
+}
+
+export default async function ObservatoryPage() {
+  const { stats, statements } = await getData();
   return (
     <>
       <NavBar />
@@ -64,19 +61,16 @@ export default function ObservatoryPage() {
           <section className="mb-12">
             <h2 className="text-[22px] font-bold text-[#211A22] mb-6">مؤشرات بيئة العمل</h2>
             <div className="grid sm:grid-cols-3 gap-4">
-              {indicators.map((ind) => (
+              {stats.map((ind) => (
                 <div
-                  key={ind.number}
+                  key={ind.id}
                   className="bg-white border border-[#DDD3CC] rounded-[16px] p-5 text-center shadow-[0_1px_3px_rgba(33,26,34,0.06)]"
                 >
-                  <p
-                    className="text-[42px] font-bold leading-none mb-3"
-                    style={{ color: ind.color }}
-                  >
-                    {ind.number}
+                  <p className="text-[42px] font-bold leading-none mb-3" style={{ color: ind.accent_color }}>
+                    {ind.number_text}
                   </p>
                   <p className="text-[13px] text-[#211A22] leading-[1.7] mb-2">{ind.label}</p>
-                  <p className="text-[11px] text-[#6B5D6E]">{ind.source}</p>
+                  {ind.source_label && <p className="text-[11px] text-[#6B5D6E]">{ind.source_label}</p>}
                 </div>
               ))}
             </div>
@@ -121,24 +115,16 @@ export default function ObservatoryPage() {
               <h2 className="text-[22px] font-bold text-[#211A22]">بيانات ومواقف</h2>
             </div>
             <div className="flex flex-col gap-3">
-              {[
-                {
-                  date: "مايو ٢٠٢٦",
-                  title: "بيان: نطالب بتطبيق قانون الأمومة في بيئات الإعلام",
-                  summary: "دعوة لوزارة العمل لتكثيف التفتيش على امتثال المؤسسات الإعلامية لحقوق الأمومة.",
-                },
-                {
-                  date: "مارس ٢٠٢٦",
-                  title: "موقف: شفافية الرواتب شرط لبيئة عمل عادلة",
-                  summary: "مطالبة بإلزام الشركات الكبرى بنشر تقارير المساواة في الأجر.",
-                },
-              ].map((s) => (
-                <div key={s.title} className="bg-white border border-[#DDD3CC] rounded-[14px] p-5">
-                  <p className="text-[12px] text-[#6B5D6E] mb-1.5">{s.date}</p>
+              {statements.map((s) => (
+                <div key={s.id} className="bg-white border border-[#DDD3CC] rounded-[14px] p-5">
+                  <p className="text-[12px] text-[#6B5D6E] mb-1.5">{s.date_label}</p>
                   <h3 className="text-[15px] font-semibold text-[#211A22] mb-1.5">{s.title}</h3>
                   <p className="text-[13px] text-[#6B5D6E] leading-[1.7]">{s.summary}</p>
                 </div>
               ))}
+              {statements.length === 0 && (
+                <p className="text-[14px] text-[#6B5D6E]">لا توجد بيانات منشورة بعد.</p>
+              )}
             </div>
           </section>
 

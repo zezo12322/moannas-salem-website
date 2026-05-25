@@ -2,46 +2,41 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import Footer from "@/components/Footer";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
 export const metadata: Metadata = {
   title: "حملاتنا — مؤنث سالم",
   description: "حملات مؤنث سالم لحقوق المرأة في بيئة العمل — من حقوق الأمومة إلى الأجر العادل إلى أمان الصحفيات.",
 };
 
-const campaigns = [
-  {
-    href: "/campaigns/not-my-fault-im-a-mother",
-    title: "مش ذنبي إني أم",
-    status: "جارية",
-    statusColor: "#4F7C68",
-    statusBg: "rgba(79,124,104,0.12)",
-    body: "حملة ضد الفصل والتمييز في العمل بسبب الأمومة — نوثّق الانتهاكات ونطالب بتطبيق قانون الأمومة.",
-    issueRef: "الأمومة والعمل",
-    color: "#C66B7D",
-  },
-  {
-    href: "/campaigns/aman-qalami",
-    title: "أمان قلمي",
-    status: "جارية",
-    statusColor: "#4F7C68",
-    statusBg: "rgba(79,124,104,0.12)",
-    body: "لأن قلم الصحفية لا يجب أن يُكلّفها أمانها — حملة لحماية الصحفيات من العنف الرقمي والمضايقات الميدانية.",
-    issueRef: "العنف الرقمي",
-    color: "#4B245E",
-  },
-  {
-    href: "/campaigns/fair-pay-is-a-right",
-    title: "الأجر العادل حق",
-    status: "جارية",
-    statusColor: "#4F7C68",
-    statusBg: "rgba(79,124,104,0.12)",
-    body: "حملة لكشف فجوة الأجور والمطالبة بسياسات أجر شفافة وعادلة في بيئات العمل المصرية.",
-    issueRef: "الأجر العادل",
-    color: "#D9963D",
-  },
-];
+type Campaign = {
+  id: string; title: string; slug: string; status: string;
+  summary: string; issue_ref: string | null; accent_color: string;
+};
 
-export default function CampaignsPage() {
+const STATUS_LABELS: Record<string, string> = { active: "جارية", ended: "منتهية", draft: "مسودة" };
+const STATUS_COLORS: Record<string, { color: string; bg: string }> = {
+  active: { color: "#4F7C68", bg: "rgba(79,124,104,0.12)" },
+  ended: { color: "#6B5D6E", bg: "rgba(107,93,110,0.10)" },
+  draft: { color: "#D9963D", bg: "rgba(217,150,61,0.12)" },
+};
+
+async function getCampaigns(): Promise<Campaign[]> {
+  try {
+    const admin = createAdminSupabaseClient();
+    const { data } = await admin
+      .from("campaigns")
+      .select("id, title, slug, status, summary, issue_ref, accent_color")
+      .in("status", ["active", "ended"])
+      .order("display_order", { ascending: true });
+    return (data as Campaign[]) ?? [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function CampaignsPage() {
+  const campaigns = await getCampaigns();
   return (
     <>
       <NavBar />
@@ -63,36 +58,44 @@ export default function CampaignsPage() {
           </p>
 
           <div className="flex flex-col gap-5">
-            {campaigns.map((c) => (
-              <Link
-                key={c.href}
-                href={c.href}
-                className="group bg-white border border-[#DDD3CC] rounded-[18px] p-6 shadow-[0_1px_3px_rgba(33,26,34,0.06)] hover:shadow-[0_4px_16px_rgba(33,26,34,0.10)] transition-all duration-200 border-s-4"
-                style={{ borderInlineStartColor: c.color }}
-              >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <h2 className="text-[18px] font-bold text-[#211A22] group-hover:text-[#4B245E] transition-colors leading-[1.3]">
-                    {c.title}
-                  </h2>
-                  <span
-                    className="text-[11px] font-semibold px-2.5 py-1 rounded-full flex-shrink-0"
-                    style={{ color: c.statusColor, backgroundColor: c.statusBg }}
-                  >
-                    {c.status}
-                  </span>
-                </div>
-                <p className="text-[14px] text-[#6B5D6E] leading-[1.7] mb-4">{c.body}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-[12px] text-[#6B5D6E]">
-                    القضية:{" "}
-                    <span className="font-medium text-[#211A22]">{c.issueRef}</span>
-                  </span>
-                  <span className="text-[13px] text-[#4B245E] font-semibold group-hover:underline flex items-center gap-1">
-                    اقرئي التفاصيل <span aria-hidden="true">←</span>
-                  </span>
-                </div>
-              </Link>
-            ))}
+            {campaigns.map((c) => {
+              const sc = STATUS_COLORS[c.status] ?? STATUS_COLORS.active;
+              return (
+                <Link
+                  key={c.id}
+                  href={`/campaigns/${c.slug}`}
+                  className="group bg-white border border-[#DDD3CC] rounded-[18px] p-6 shadow-[0_1px_3px_rgba(33,26,34,0.06)] hover:shadow-[0_4px_16px_rgba(33,26,34,0.10)] transition-all duration-200 border-s-4"
+                  style={{ borderInlineStartColor: c.accent_color }}
+                >
+                  <div className="flex items-start justify-between gap-3 mb-3">
+                    <h2 className="text-[18px] font-bold text-[#211A22] group-hover:text-[#4B245E] transition-colors leading-[1.3]">
+                      {c.title}
+                    </h2>
+                    <span
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded-full flex-shrink-0"
+                      style={{ color: sc.color, backgroundColor: sc.bg }}
+                    >
+                      {STATUS_LABELS[c.status]}
+                    </span>
+                  </div>
+                  <p className="text-[14px] text-[#6B5D6E] leading-[1.7] mb-4">{c.summary}</p>
+                  <div className="flex items-center justify-between">
+                    {c.issue_ref && (
+                      <span className="text-[12px] text-[#6B5D6E]">
+                        القضية:{" "}
+                        <span className="font-medium text-[#211A22]">{c.issue_ref}</span>
+                      </span>
+                    )}
+                    <span className="text-[13px] text-[#4B245E] font-semibold group-hover:underline flex items-center gap-1 ms-auto">
+                      اقرئي التفاصيل <span aria-hidden="true">←</span>
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+            {campaigns.length === 0 && (
+              <p className="text-[15px] text-[#6B5D6E]">لا توجد حملات نشطة حاليًا.</p>
+            )}
           </div>
 
           {/* Participation */}
