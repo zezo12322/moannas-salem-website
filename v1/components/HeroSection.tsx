@@ -1,4 +1,8 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { staggerContainer, heroItem, scaleIn } from "@/lib/animations";
 
 export default function HeroSection() {
   return (
@@ -19,25 +23,37 @@ export default function HeroSection() {
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-8 py-16 w-full">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Text content — right side in RTL */}
-          <div className="order-2 md:order-1">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="order-2 md:order-1"
+          >
             {/* H1 */}
-            <h1
+            <motion.h1
+              variants={heroItem}
               id="hero-heading"
               className="text-[36px] md:text-[48px] lg:text-[52px] font-bold text-[#4B245E] leading-[1.2] mb-6"
             >
               بيئة عمل آمنة وعادلة
               <br />
               لكل صحفية وامرأة عاملة
-            </h1>
+            </motion.h1>
 
             {/* Subheadline */}
-            <p className="text-[18px] md:text-[20px] text-[#211A22] leading-[1.9] mb-8 max-w-xl">
+            <motion.p
+              variants={heroItem}
+              className="text-[18px] md:text-[20px] text-[#211A22] leading-[1.9] mb-8 max-w-xl"
+            >
               مؤنث سالم تدعم الصحفيات والنساء العاملات نفسيًا وقانونيًا
               ومهنيًا، وتوثّق الانتهاكات، وتحوّل الشهادات إلى حملات تغيير.
-            </p>
+            </motion.p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row gap-3 mb-6">
+            <motion.div
+              variants={heroItem}
+              className="flex flex-col sm:flex-row gap-3 mb-6"
+            >
               <Link
                 href="/support"
                 className="inline-flex items-center justify-center gap-2 bg-[#4B245E] text-white text-[16px] font-semibold px-7 py-3.5 rounded-full hover:bg-[#3A1A4A] transition-colors duration-[250ms] shadow-sm"
@@ -57,10 +73,13 @@ export default function HeroSection() {
               >
                 اعرفي حقوقك
               </Link>
-            </div>
+            </motion.div>
 
             {/* Trust signal */}
-            <div className="flex items-center gap-2 text-[#4F7C68] text-[13px] font-medium">
+            <motion.div
+              variants={heroItem}
+              className="flex items-center gap-2 text-[#4F7C68] text-[13px] font-medium"
+            >
               <svg
                 width="16"
                 height="16"
@@ -79,17 +98,20 @@ export default function HeroSection() {
               <span>
                 بياناتك سرية · يمكنك استخدام اسم مستعار · لا نشر دون موافقتك
               </span>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Illustration placeholder — left side in RTL */}
-          <div
+          <motion.div
+            variants={scaleIn}
+            initial="hidden"
+            animate="visible"
             className="order-1 md:order-2 flex items-center justify-center"
             aria-hidden="true"
           >
             <div className="relative w-full max-w-sm mx-auto">
               {/* Abstract hands/notebook illustration using CSS shapes */}
-              <div className="aspect-square rounded-[24px] bg-gradient-to-br from-[#F2B6A0]/40 to-[#4B245E]/10 flex items-center justify-center">
+              <div className="aspect-square rounded-[24px] bg-gradient-to-br from-[#F2B6A0]/40 to-[#4B245E]/10 flex items-center justify-center animate-float">
                 <svg
                   viewBox="0 0 280 280"
                   fill="none"
@@ -183,7 +205,7 @@ export default function HeroSection() {
                 </svg>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

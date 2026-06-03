@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_Arabic, Cairo, Inter } from "next/font/google";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import "./globals.css";
 
 const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
@@ -48,6 +49,7 @@ export default function RootLayout({
       className={`${ibmPlexSansArabic.variable} ${cairo.variable} ${inter.variable}`}
     >
       <body className="min-h-screen flex flex-col">
+        <ScrollProgress />
         <a href="#main-content" className="skip-to-main">
           انتقل للمحتوى الرئيسي
         </a>
